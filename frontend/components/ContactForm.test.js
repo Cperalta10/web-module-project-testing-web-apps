@@ -41,22 +41,43 @@ test("renders THREE error messages if user enters no values into any fields.", a
   });
 });
 
-// test('renders ONE error message if user enters a valid first name and last name but no email.', async () => {
+test("renders ONE error message if user enters a valid first name and last name but no email.", async () => {
+  render(<ContactForm />);
 
-// });
+  const firstNameField = screen.getByLabelText(/first name*/i);
+  userEvent.type(firstNameField, "Chris");
 
-// test('renders "email must be a valid email address" if an invalid email is entered', async () => {
+  const lastNameField = screen.getByLabelText(/last name*/i);
+  userEvent.type(lastNameField, "Peralta");
 
-// });
+  const button = screen.getByRole("button");
+  userEvent.click(button);
 
-// test('renders "lastName is a required field" if an last name is not entered and the submit button is clicked', async () => {
+  const errorMessages = await screen.getAllByTestId("error");
+  expect(errorMessages).toHaveLength(1);
+});
 
-// });
+test('renders "email must be a valid email address" if an invalid email is entered', async () => {
+  render(<ContactForm />);
 
-// test('renders all firstName, lastName and email text when submitted. Does NOT render message if message is not submitted.', async () => {
+  const emailField = screen.getByLabelText(/email*/i);
+  userEvent.type(emailField, "chris@gmail");
 
-// });
+  const errorMessage = await screen.findByText(
+    /email must be a valid email address/i
+  );
 
-// test('renders all fields text when all fields are submitted.', async () => {
+  expect(errorMessage).toBeInTheDocument();
+});
 
-// });
+test('renders "lastName is a required field" if an last name is not entered and the submit button is clicked', async () => {
+  render(<ContactForm />);
+});
+
+test("renders all firstName, lastName and email text when submitted. Does NOT render message if message is not submitted.", async () => {
+  render(<ContactForm />);
+});
+
+test("renders all fields text when all fields are submitted.", async () => {
+  render(<ContactForm />);
+});
